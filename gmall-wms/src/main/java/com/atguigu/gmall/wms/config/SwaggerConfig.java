@@ -31,7 +31,8 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("谷粒商城-库存平台接口文档")
-                .description("提供库存平台的文档")
+                .description("提供库存" +
+                        "平台的文档")
                 .termsOfServiceUrl("http://www.atguigu.com/")
                 .version("1.0")
                 .build();
