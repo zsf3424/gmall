@@ -18,7 +18,7 @@ exports.assertion = function (selector, count) {
   }
   this.command = function (cb) {
     var self = this
-    return this.api.execute(function (selectorToCount) {
+    return this.feign.execute(function (selectorToCount) {
       return document.querySelectorAll(selectorToCount).length
     }, [selector], function (res) {
       cb.call(self, res)

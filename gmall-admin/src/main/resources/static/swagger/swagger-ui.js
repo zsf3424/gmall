@@ -189,7 +189,7 @@ templates['main'] = template({"1":function(container,depth0,helpers,partials,dat
 },"14":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "  , <span style=\"font-variant: small-caps\" data-sw-translate>api version</span>: "
+  return "  , <span style=\"font-variant: small-caps\" data-sw-translate>feign version</span>: "
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || helpers.helperMissing).call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.version : stack1),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
     + "\n    ";
 },"16":function(container,depth0,helpers,partials,data) {
@@ -248,7 +248,7 @@ templates['oauth2'] = template({"1":function(container,depth0,helpers,partials,d
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.OAuthSchemeKey : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
     + "\"/>\n                <label>"
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.scope : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
-    + "</label><br/>\n                <span class=\"api-scope-desc\">"
+    + "</label><br/>\n                <span class=\"feign-scope-desc\">"
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.description : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.OAuthSchemeKey : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
@@ -275,7 +275,7 @@ templates['oauth2'] = template({"1":function(container,depth0,helpers,partials,d
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.clientAuthentication : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "    <p><strong> "
     + ((stack1 = (helpers.escape || (depth0 && depth0.escape) || alias2).call(alias1,(depth0 != null ? depth0.appName : depth0),{"name":"escape","hash":{},"data":data})) != null ? stack1 : "")
-    + " </strong> API requires the following scopes. Select which ones you want to grant to Swagger UI.</p>\n    <p>Scopes are used to grant an application different levels of access to data on behalf of the end user. Each API may declare one or more scopes.\n        <a href=\"#\">Learn how to use</a>\n    </p>\n    <ul class=\"api-popup-scopes\">\n"
+    + " </strong> API requires the following scopes. Select which ones you want to grant to Swagger UI.</p>\n    <p>Scopes are used to grant an application different levels of access to data on behalf of the end user. Each API may declare one or more scopes.\n        <a href=\"#\">Learn how to use</a>\n    </p>\n    <ul class=\"feign-popup-scopes\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.scopes : depth0),{"name":"each","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "    </ul>\n</div>";
 },"useData":true});
@@ -672,9 +672,9 @@ templates['parameter_content_type'] = template({"1":function(container,depth0,he
 templates['popup'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper;
 
-  return "<div class=\"api-popup-dialog-wrapper\">\n    <div class=\"api-popup-title\">"
+  return "<div class=\"feign-popup-dialog-wrapper\">\n    <div class=\"feign-popup-title\">"
     + container.escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n    <div class=\"api-popup-content\"></div>\n    <p class=\"error-msg\"></p>\n    <div class=\"api-popup-actions\">\n        <button class=\"api-popup-cancel api-button gray\" type=\"button\">Cancel</button>\n    </div>\n</div>\n<div class=\"api-popup-dialog-shadow\"></div>";
+    + "</div>\n    <div class=\"feign-popup-content\"></div>\n    <p class=\"error-msg\"></p>\n    <div class=\"feign-popup-actions\">\n        <button class=\"feign-popup-cancel feign-button gray\" type=\"button\">Cancel</button>\n    </div>\n</div>\n<div class=\"feign-popup-dialog-shadow\"></div>";
 },"useData":true});
 templates['resource'] = template({"1":function(container,depth0,helpers,partials,data) {
     return " : ";
@@ -3842,7 +3842,7 @@ SwaggerClient.prototype.buildFromSpec = function (response) {
         }
       }
 
-      // bind self operation's execute command to the api
+      // bind self operation's execute command to the feign
       _.forEach(tags, function (tag) {
         var clientProperty = _.indexOf(reservedClientTags, tag) > -1 ? '_' + tag : tag;
         var apiProperty = _.indexOf(reservedApiTags, tag) > -1 ? '_' + tag : tag;
@@ -6007,7 +6007,7 @@ SwaggerSpecConverter.prototype.setDocumentationLocation = function (location) {
 };
 
 /**
- * converts a resource listing OR api declaration
+ * converts a resource listing OR feign declaration
  **/
 SwaggerSpecConverter.prototype.convert = function (obj, clientAuthorizations, opts, callback) {
   // not a valid spec
@@ -6953,8 +6953,8 @@ var Operation = module.exports = function (parent, scheme, operationId, httpMeth
   }
 
   if (errors.length > 0) {
-    if (this.resource && this.resource.api && this.resource.api.fail) {
-      this.resource.api.fail(errors);
+    if (this.resource && this.resource.feign && this.resource.feign.fail) {
+      this.resource.feign.fail(errors);
     }
   }
 
@@ -20213,7 +20213,7 @@ request.getXHR = function () {
  *
  * @param {String} s
  * @return {String}
- * @api private
+ * @feign private
  */
 
 var trim = ''.trim
@@ -20225,7 +20225,7 @@ var trim = ''.trim
  *
  * @param {Object} obj
  * @return {String}
- * @api private
+ * @feign private
  */
 
 function serialize(obj) {
@@ -20276,7 +20276,7 @@ function pushEncodedKeyValuePair(pairs, key, val) {
   *
   * @param {String} str
   * @return {Object}
-  * @api private
+  * @feign private
   */
 
 function parseString(str) {
@@ -20355,7 +20355,7 @@ request.parse = {
  *
  * @param {String} str
  * @return {Object}
- * @api private
+ * @feign private
  */
 
 function parseHeader(str) {
@@ -20384,7 +20384,7 @@ function parseHeader(str) {
  *
  * @param {String} mime
  * @return {Boolean}
- * @api private
+ * @feign private
  */
 
 function isJSON(mime) {
@@ -20396,7 +20396,7 @@ function isJSON(mime) {
  *
  * @param {String} str
  * @return {String}
- * @api private
+ * @feign private
  */
 
 function type(str){
@@ -20408,7 +20408,7 @@ function type(str){
  *
  * @param {String} str
  * @return {Object}
- * @api private
+ * @feign private
  */
 
 function params(str){
@@ -20465,7 +20465,7 @@ function params(str){
  *
  * @param {XMLHTTPRequest} xhr
  * @param {Object} options
- * @api private
+ * @feign private
  */
 
 function Response(req, options) {
@@ -20494,7 +20494,7 @@ function Response(req, options) {
  *
  * @param {String} field
  * @return {String}
- * @api public
+ * @feign public
  */
 
 Response.prototype.get = function(field){
@@ -20510,7 +20510,7 @@ Response.prototype.get = function(field){
  * will provide you with a `.type` of "text/plain".
  *
  * @param {Object} header
- * @api private
+ * @feign private
  */
 
 Response.prototype._setHeaderProperties = function(header){
@@ -20531,7 +20531,7 @@ Response.prototype._setHeaderProperties = function(header){
  *
  * @param {String} str
  * @return {Mixed}
- * @api private
+ * @feign private
  */
 
 Response.prototype._parseBody = function(str){
@@ -20562,7 +20562,7 @@ Response.prototype._parseBody = function(str){
  *   - .notFound
  *
  * @param {Number} status
- * @api private
+ * @feign private
  */
 
 Response.prototype._setStatusProperties = function(status){
@@ -20600,7 +20600,7 @@ Response.prototype._setStatusProperties = function(status){
  * Return an `Error` representative of this response.
  *
  * @return {Error}
- * @api public
+ * @feign public
  */
 
 Response.prototype.toError = function(){
@@ -20628,7 +20628,7 @@ request.Response = Response;
  *
  * @param {String} method
  * @param {String} url
- * @api public
+ * @feign public
  */
 
 function Request(method, url) {
@@ -20706,7 +20706,7 @@ for (var key in requestBase) {
  *
  * @param {String} type
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 Request.prototype.type = function(type){
@@ -20726,7 +20726,7 @@ Request.prototype.type = function(type){
  *
  * @param {String} val
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 Request.prototype.responseType = function(val){
@@ -20751,7 +20751,7 @@ Request.prototype.responseType = function(val){
  *
  * @param {String} accept
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 Request.prototype.accept = function(type){
@@ -20766,7 +20766,7 @@ Request.prototype.accept = function(type){
  * @param {String} pass
  * @param {Object} options with 'type' property 'auto' or 'basic' (default 'basic')
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 Request.prototype.auth = function(user, pass, options){
@@ -20801,7 +20801,7 @@ Request.prototype.auth = function(user, pass, options){
 *
 * @param {Object|String} val
 * @return {Request} for chaining
-* @api public
+* @feign public
 */
 
 Request.prototype.query = function(val){
@@ -20824,7 +20824,7 @@ Request.prototype.query = function(val){
  * @param {Blob|File} file
  * @param {String} filename
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 Request.prototype.attach = function(field, file, filename){
@@ -20845,7 +20845,7 @@ Request.prototype._getFormData = function(){
  *
  * @param {Error} err
  * @param {Response} res
- * @api private
+ * @feign private
  */
 
 Request.prototype.callback = function(err, res){
@@ -20857,7 +20857,7 @@ Request.prototype.callback = function(err, res){
 /**
  * Invoke callback with x-domain error.
  *
- * @api private
+ * @feign private
  */
 
 Request.prototype.crossDomainError = function(){
@@ -20874,7 +20874,7 @@ Request.prototype.crossDomainError = function(){
 /**
  * Invoke callback with timeout error.
  *
- * @api private
+ * @feign private
  */
 
 Request.prototype._timeoutError = function(){
@@ -20887,7 +20887,7 @@ Request.prototype._timeoutError = function(){
 /**
  * Compose querystring to append to req.url
  *
- * @api private
+ * @feign private
  */
 
 Request.prototype._appendQueryString = function(){
@@ -20905,7 +20905,7 @@ Request.prototype._appendQueryString = function(){
  *
  * @param {Function} fn
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 Request.prototype.end = function(fn){
@@ -21018,7 +21018,7 @@ request.Request = Request;
  * @param {Mixed|Function} [data] or fn
  * @param {Function} [fn]
  * @return {Request}
- * @api public
+ * @feign public
  */
 
 request.get = function(url, data, fn){
@@ -21036,7 +21036,7 @@ request.get = function(url, data, fn){
  * @param {Mixed|Function} [data] or fn
  * @param {Function} [fn]
  * @return {Request}
- * @api public
+ * @feign public
  */
 
 request.head = function(url, data, fn){
@@ -21054,7 +21054,7 @@ request.head = function(url, data, fn){
  * @param {Mixed|Function} [data] or fn
  * @param {Function} [fn]
  * @return {Request}
- * @api public
+ * @feign public
  */
 
 request.options = function(url, data, fn){
@@ -21071,7 +21071,7 @@ request.options = function(url, data, fn){
  * @param {String} url
  * @param {Function} [fn]
  * @return {Request}
- * @api public
+ * @feign public
  */
 
 function del(url, fn){
@@ -21090,7 +21090,7 @@ request['delete'] = del;
  * @param {Mixed} [data]
  * @param {Function} [fn]
  * @return {Request}
- * @api public
+ * @feign public
  */
 
 request.patch = function(url, data, fn){
@@ -21108,7 +21108,7 @@ request.patch = function(url, data, fn){
  * @param {Mixed} [data]
  * @param {Function} [fn]
  * @return {Request}
- * @api public
+ * @feign public
  */
 
 request.post = function(url, data, fn){
@@ -21126,7 +21126,7 @@ request.post = function(url, data, fn){
  * @param {Mixed|Function} [data] or fn
  * @param {Function} [fn]
  * @return {Request}
- * @api public
+ * @feign public
  */
 
 request.put = function(url, data, fn){
@@ -21143,7 +21143,7 @@ request.put = function(url, data, fn){
  *
  * @param {Object} obj
  * @return {Boolean}
- * @api private
+ * @feign private
  */
 
 function isObject(obj) {
@@ -21162,7 +21162,7 @@ var isObject = require('./is-object');
  * Clear previous timeout.
  *
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 exports.clearTimeout = function _clearTimeout(){
@@ -21177,7 +21177,7 @@ exports.clearTimeout = function _clearTimeout(){
  * This function will be called to convert incoming data into request.body
  *
  * @param {Function}
- * @api public
+ * @feign public
  */
 
 exports.parse = function parse(fn){
@@ -21191,7 +21191,7 @@ exports.parse = function parse(fn){
  * This function will be called to convert data set via .send or .attach into payload to send
  *
  * @param {Function}
- * @api public
+ * @feign public
  */
 
 exports.serialize = function serialize(fn){
@@ -21204,7 +21204,7 @@ exports.serialize = function serialize(fn){
  *
  * @param {Number} ms
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 exports.timeout = function timeout(ms){
@@ -21248,7 +21248,7 @@ exports.use = function use(fn) {
  *
  * @param {String} field
  * @return {String}
- * @api public
+ * @feign public
  */
 
 exports.get = function(field){
@@ -21263,7 +21263,7 @@ exports.get = function(field){
  *
  * @param {String} field
  * @return {String}
- * @api private
+ * @feign private
  * @deprecated
  */
 
@@ -21287,7 +21287,7 @@ exports.getHeader = exports.get;
  * @param {String|Object} field
  * @param {String} val
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 exports.set = function(field, val){
@@ -21333,7 +21333,7 @@ exports.unset = function(field){
  * @param {String} name
  * @param {String|Blob|File|Buffer|fs.ReadStream} val
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 exports.field = function(name, val) {
   this._getFormData().append(name, val);
@@ -21344,7 +21344,7 @@ exports.field = function(name, val) {
  * Abort the request, and clear potential timeout.
  *
  * @return {Request}
- * @api public
+ * @feign public
  */
 exports.abort = function(){
   if (this._aborted) {
@@ -21366,7 +21366,7 @@ exports.abort = function(){
  * and also must set "Access-Control-Allow-Credentials"
  * to "true".
  *
- * @api public
+ * @feign public
  */
 
 exports.withCredentials = function(){
@@ -21380,7 +21380,7 @@ exports.withCredentials = function(){
  *
  * @param {Number} n
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 exports.redirects = function(n){
@@ -21394,7 +21394,7 @@ exports.redirects = function(n){
  * it cannot be chained.
  *
  * @return {Object} describing method, url, and data of this request
- * @api public
+ * @feign public
  */
 
 exports.toJSON = function(){
@@ -21414,7 +21414,7 @@ exports.toJSON = function(){
  *
  * @param {Object} obj
  * @return {Boolean}
- * @api private
+ * @feign private
  */
 
 exports._isHost = function _isHost(obj) {
@@ -21467,7 +21467,7 @@ exports._isHost = function _isHost(obj) {
  *
  * @param {String|Object} data
  * @return {Request} for chaining
- * @api public
+ * @feign public
  */
 
 exports.send = function(data){
@@ -21516,7 +21516,7 @@ exports.send = function(data){
  * @param {String} method
  * @param {String|Function} url or callback
  * @return {Request}
- * @api public
+ * @feign public
  */
 
 function request(RequestConstructor, method, url) {
@@ -21548,7 +21548,7 @@ if (typeof module !== 'undefined') {
 /**
  * Initialize a new `Emitter`.
  *
- * @api public
+ * @feign public
  */
 
 function Emitter(obj) {
@@ -21560,7 +21560,7 @@ function Emitter(obj) {
  *
  * @param {Object} obj
  * @return {Object}
- * @api private
+ * @feign private
  */
 
 function mixin(obj) {
@@ -21576,7 +21576,7 @@ function mixin(obj) {
  * @param {String} event
  * @param {Function} fn
  * @return {Emitter}
- * @api public
+ * @feign public
  */
 
 Emitter.prototype.on =
@@ -21594,7 +21594,7 @@ Emitter.prototype.addEventListener = function(event, fn){
  * @param {String} event
  * @param {Function} fn
  * @return {Emitter}
- * @api public
+ * @feign public
  */
 
 Emitter.prototype.once = function(event, fn){
@@ -21615,7 +21615,7 @@ Emitter.prototype.once = function(event, fn){
  * @param {String} event
  * @param {Function} fn
  * @return {Emitter}
- * @api public
+ * @feign public
  */
 
 Emitter.prototype.off =
@@ -21680,7 +21680,7 @@ Emitter.prototype.emit = function(event){
  *
  * @param {String} event
  * @return {Array}
- * @api public
+ * @feign public
  */
 
 Emitter.prototype.listeners = function(event){
@@ -21693,7 +21693,7 @@ Emitter.prototype.listeners = function(event){
  *
  * @param {String} event
  * @return {Boolean}
- * @api public
+ * @feign public
  */
 
 Emitter.prototype.hasListeners = function(event){
@@ -21802,7 +21802,7 @@ window.SwaggerUi = Backbone.Router.extend({
     this.load();
   },
 
-  // Create an api and render
+  // Create an feign and render
   load: function(){
     // Initialize the API object
     if (this.mainView) {
@@ -21961,14 +21961,14 @@ window.SwaggerUi.utils = {};
 (function(){
   window.authorizations = {
     add: function() {
-      warn('Using window.authorizations is deprecated. Please use SwaggerUi.api.clientAuthorizations.add().');
+      warn('Using window.authorizations is deprecated. Please use SwaggerUi.feign.clientAuthorizations.add().');
 
       if (typeof window.swaggerUi === 'undefined') {
         throw new TypeError('window.swaggerUi is not defined');
       }
 
       if (window.swaggerUi instanceof SwaggerUi) {
-        window.swaggerUi.api.clientAuthorizations.add.apply(window.swaggerUi.api.clientAuthorizations, arguments);
+        window.swaggerUi.feign.clientAuthorizations.add.apply(window.swaggerUi.feign.clientAuthorizations, arguments);
       }
     }
   };
@@ -22298,7 +22298,7 @@ SwaggerUi.Collections.AuthsCollection = Backbone.Collection.extend({
         var authz = {};
 
         if(typeof window.swaggerUi !== 'undefined') {
-            authz = Object.assign({}, window.swaggerUi.api.clientAuthorizations.authz);
+            authz = Object.assign({}, window.swaggerUi.feign.clientAuthorizations.authz);
         }
 
         return _.map(data, function (auth, name) {
@@ -22446,10 +22446,10 @@ SwaggerUi.Views.AuthView = Backbone.View.extend({
                     auth.get('in')
                 );
 
-                this.router.api.clientAuthorizations.add(auth.get('title'), keyAuth);
+                this.router.feign.clientAuthorizations.add(auth.get('title'), keyAuth);
             } else if (type === 'basic') {
                 basicAuth = new SwaggerClient.PasswordAuthorization(auth.get('username'), auth.get('password'));
-                this.router.api.clientAuthorizations.add(auth.get('title'), basicAuth);
+                this.router.feign.clientAuthorizations.add(auth.get('title'), basicAuth);
             } else if (type === 'oauth2') {
                 this.handleOauth2Login(auth);
             }
@@ -22462,7 +22462,7 @@ SwaggerUi.Views.AuthView = Backbone.View.extend({
         e.preventDefault();
 
         this.authsCollectionView.collection.forEach(function (auth) {
-            window.swaggerUi.api.clientAuthorizations.remove(auth.get('title'));
+            window.swaggerUi.feign.clientAuthorizations.remove(auth.get('title'));
         });
 
         this.router.load();
@@ -25117,10 +25117,10 @@ SwaggerUi.Views.PopupView = Backbone.View.extend({
     },
 
     template: Handlebars.templates.popup,
-    className: 'api-popup-dialog',
+    className: 'feign-popup-dialog',
 
     selectors: {
-        content: '.api-popup-content',
+        content: '.feign-popup-content',
         main   : '#swagger-ui-container'
     },
 
@@ -25319,15 +25319,15 @@ SwaggerUi.Views.StatusCodeView = Backbone.View.extend({
 
   render: function(){
     var responseModel, responseModelView;
-    var value = this.router.api.models[this.model.responseModel];
+    var value = this.router.feign.models[this.model.responseModel];
     $(this.el).html(Handlebars.templates.status_code(this.model));
 
-    if (this.router.api.models.hasOwnProperty(this.model.responseModel)) {
+    if (this.router.feign.models.hasOwnProperty(this.model.responseModel)) {
       responseModel = {
         sampleJSON: JSON.stringify(SwaggerUi.partials.signature.createJSONSample(value), void 0, 2),
-        sampleXML: this.model.isXML ? SwaggerUi.partials.signature.createXMLSample('', this.model.schema, this.router.api.models) : false,
+        sampleXML: this.model.isXML ? SwaggerUi.partials.signature.createXMLSample('', this.model.schema, this.router.feign.models) : false,
         isParam: false,
-        signature: SwaggerUi.partials.signature.getModelSignature(this.model.responseModel, value, this.router.api.models),
+        signature: SwaggerUi.partials.signature.getModelSignature(this.model.responseModel, value, this.router.feign.models),
         defaultRendering: this.model.defaultRendering
       };
     } else {

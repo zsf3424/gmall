@@ -2,7 +2,6 @@ package com.atguigu.gmall.pms.service.impl;
 
 import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.gmall.pms.dao.*;
-import com.atguigu.gmall.pms.entity.ProductAttrValueEntity;
 import com.atguigu.gmall.pms.entity.SkuImagesEntity;
 import com.atguigu.gmall.pms.entity.SkuInfoEntity;
 import com.atguigu.gmall.pms.entity.SkuSaleAttrValueEntity;
@@ -19,16 +18,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.Query;
-import com.atguigu.core.bean.QueryCondition;
 
 import com.atguigu.gmall.pms.entity.SpuInfoEntity;
 import com.atguigu.gmall.pms.service.SpuInfoService;
