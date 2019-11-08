@@ -1,6 +1,7 @@
 package com.atguigu.gmall.pms.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -35,7 +36,7 @@ public class SpuInfoController {
 
     @ApiOperation("spu商品信息查询")
     @GetMapping
-    public Resp<PageVo> querySpuInfo(QueryCondition condition, @RequestParam(value = "catId",defaultValue = "0") Long catId) {
+    public Resp<PageVo> querySpuInfo(QueryCondition condition, @RequestParam(value = "catId", defaultValue = "0") Long catId) {
         PageVo page = this.spuInfoService.querySpuInfo(condition, catId);
         return Resp.ok(page);
     }
@@ -52,6 +53,18 @@ public class SpuInfoController {
         return Resp.ok(page);
     }
 
+
+    /**
+     * 列表
+     */
+    @ApiOperation("分页查询(排序)")
+    @PostMapping("/list")
+    @PreAuthorize("hasAuthority('pms:spuinfo:list')")
+    public Resp<List<SpuInfoEntity>> querySpuPage(@RequestBody QueryCondition queryCondition) {
+        PageVo page = spuInfoService.queryPage(queryCondition);
+
+        return Resp.ok((List<SpuInfoEntity>)page.getList());
+    }
 
     /**
      * 信息
