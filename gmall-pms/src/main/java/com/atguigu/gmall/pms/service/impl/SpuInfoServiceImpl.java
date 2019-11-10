@@ -11,12 +11,17 @@ import com.atguigu.gmall.pms.vo.ProductAttrValueVO;
 import com.atguigu.gmall.pms.vo.SkuInfoVO;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
 import com.atguigu.gmall.sms.vo.SaleVO;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +35,7 @@ import com.atguigu.gmall.pms.entity.SpuInfoEntity;
 import com.atguigu.gmall.pms.service.SpuInfoService;
 import org.springframework.util.CollectionUtils;
 
-
+@Log
 @Service("spuInfoService")
 public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> implements SpuInfoService {
 
@@ -54,6 +59,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     private GmallSmsClient gmallSmsClient;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @Override
     public PageVo queryPage(QueryCondition params) {
@@ -94,33 +102,36 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     public void saveSpuInfoVO(SpuInfoVO spuInfoVO) {
         // 1.保存spu相关
         // 1.1. 保存spu基本信息 spu_info
-        spuInfoVO.setPublishStatus(1);// 默认是已上架
-        spuInfoVO.setCreateTime(new Date());
-        spuInfoVO.setUodateTime(spuInfoVO.getCreateTime());
-        this.save(spuInfoVO);
-        Long spuId = spuInfoVO.getId();
+        Long spuId = saveSpuInfo(spuInfoVO);
 
         // 1.2. 保存spu的描述信息 spu_info_desc
         // 注意：spu_info_desc表的主键是spu_id,需要在实体类中配置该主键不是自增主键
-        SpuInfoDescEntity spuInfoDescEntity = new SpuInfoDescEntity();
-        spuInfoDescEntity.setSpuId(spuId);
-        // 把商品的图片描述，保存到spu详情中，图片地址以逗号进行分割
-        spuInfoDescEntity.setDecript(StringUtils.join(spuInfoVO.getSpuImages(), ","));
-        this.spuInfoDescDao.insert(spuInfoDescEntity);
+        saveSpuInfoDesc(spuInfoVO, spuId);
 
         // 1.3. 保存spu的规格参数信息
-        List<ProductAttrValueVO> baseAttrs = spuInfoVO.getBaseAttrs();
-        if (!CollectionUtils.isEmpty(baseAttrs)) {
-            baseAttrs.forEach(baseAttr -> {
-                baseAttr.setSpuId(spuId);
-                baseAttr.setAttrSort(0);
-                baseAttr.setQuickShow(1);
-                this.productAttrValueDao.insert(baseAttr);
-            });
+        saveBaseAttr(spuInfoVO, spuId);
+
+
+        // 2. 保存sku相关信息
+        saveSku(spuInfoVO, spuId);
+
+        //发送消息
+        sendMsg(spuId, "insert");
+
+    }
+
+    private void sendMsg(Long spuId, String type) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", spuId);
+        map.put("type", type);
+        try {
+            this.amqpTemplate.convertAndSend("GMALL-ITEM-EXCHANGE", "item." + type, map);
+        } catch (AmqpException e) {
+            System.out.println("商品消息发送异常，商品id：{ " + spuId + "}");
         }
+    }
 
-
-       // 2. 保存sku相关信息
+    private void saveSku(SpuInfoVO spuInfoVO, Long spuId) {
         List<SkuInfoVO> skus = spuInfoVO.getSkus();
         if (CollectionUtils.isEmpty(skus)) {
             return;
@@ -171,13 +182,38 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             // 3.2. 满减优惠
             // 3.3. 数量折扣
             SaleVO saleVO = new SaleVO();
-            BeanUtils.copyProperties(skuInfoVO,saleVO);
+            BeanUtils.copyProperties(skuInfoVO, saleVO);
             saleVO.setSkuId(skuId);
             this.gmallSmsClient.saveSkuSaleInfo(saleVO);
         });
+    }
 
+    private void saveBaseAttr(SpuInfoVO spuInfoVO, Long spuId) {
+        List<ProductAttrValueVO> baseAttrs = spuInfoVO.getBaseAttrs();
+        if (!CollectionUtils.isEmpty(baseAttrs)) {
+            baseAttrs.forEach(baseAttr -> {
+                baseAttr.setSpuId(spuId);
+                baseAttr.setAttrSort(0);
+                baseAttr.setQuickShow(1);
+                this.productAttrValueDao.insert(baseAttr);
+            });
+        }
+    }
 
+    private void saveSpuInfoDesc(SpuInfoVO spuInfoVO, Long spuId) {
+        SpuInfoDescEntity spuInfoDescEntity = new SpuInfoDescEntity();
+        spuInfoDescEntity.setSpuId(spuId);
+        // 把商品的图片描述，保存到spu详情中，图片地址以逗号进行分割
+        spuInfoDescEntity.setDecript(StringUtils.join(spuInfoVO.getSpuImages(), ","));
+        this.spuInfoDescDao.insert(spuInfoDescEntity);
+    }
 
+    private Long saveSpuInfo(SpuInfoVO spuInfoVO) {
+        spuInfoVO.setPublishStatus(1);// 默认是已上架
+        spuInfoVO.setCreateTime(new Date());
+        spuInfoVO.setUodateTime(spuInfoVO.getCreateTime());
+        this.save(spuInfoVO);
+        return spuInfoVO.getId();
     }
 
 

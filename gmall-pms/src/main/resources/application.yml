@@ -12,6 +12,12 @@ spring:
     password: 123456
   redis:
     host: 192.168.184.148
+  rabbitmq:
+    host: 192.168.184.148
+    username: fengge
+    password: fengge
+    virtual-host: /fengge
+
 mybatis-plus:
   mapper-locations: classpath:mapper/pms/*.xml  # 读取映射文件
   global-config:

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -48,7 +49,10 @@ public interface GmallPmsApi {
     @GetMapping("pms/productattrvalue/{spuId}")
     public Resp<List<SpuAttributeValueVO>> querySearchAttrValue(@PathVariable("spuId")Long spuId);
 
+    //@ApiOperation("根据分类等级或者父id查询分类")
+    @GetMapping("pms/category")
+    public Resp<List<CategoryEntity>> queryCategory(@RequestParam(value = "level",defaultValue = "0") Integer level, @RequestParam(value = "parentCid",required = false) Long parentCid);
 
 
 
-}
+    }

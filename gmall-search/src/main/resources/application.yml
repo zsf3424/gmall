@@ -8,3 +8,8 @@ spring:
   elasticsearch:
     jest:
       uris: http://192.168.184.148:9200
+  rabbitmq:
+    host: 192.168.184.148
+    username: fengge
+    password: fengge
+    virtual-host: /fengge
