@@ -1,5 +1,6 @@
 package com.atguigu.gmall.pms.service.impl;
 
+import com.atguigu.gmall.pms.vo.CategroyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             wrapper.eq("parent_cid",parentCid);
         }
         return this.categoryDao.selectList(wrapper);
+    }
+
+    @Override
+    public List<CategroyVO> queryCategroyWithSub(Long pid) {
+
+        List<CategroyVO> categroyVOS = this.categoryDao.queryCategroyWithSub(pid);
+
+        return categroyVOS;
     }
 
 }

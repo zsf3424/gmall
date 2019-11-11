@@ -7,6 +7,7 @@ import com.atguigu.gmall.pms.entity.BrandEntity;
 import com.atguigu.gmall.pms.entity.CategoryEntity;
 import com.atguigu.gmall.pms.entity.SkuInfoEntity;
 import com.atguigu.gmall.pms.entity.SpuInfoEntity;
+import com.atguigu.gmall.pms.vo.CategroyVO;
 import com.atguigu.gmall.pms.vo.SpuAttributeValueVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +54,8 @@ public interface GmallPmsApi {
     @GetMapping("pms/category")
     public Resp<List<CategoryEntity>> queryCategory(@RequestParam(value = "level",defaultValue = "0") Integer level, @RequestParam(value = "parentCid",required = false) Long parentCid);
 
-
+    //@ApiOperation("根据一级分类id查询二级、三级分类")
+    @GetMapping("pms/category/{pid}")
+    public Resp<List<CategroyVO>> queryCategroyWithSub(@PathVariable("pid")Long pid);
 
     }

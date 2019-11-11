@@ -1,10 +1,7 @@
-server:
-  port: 8087
 spring:
+  application:
+    name: index-service
   cloud:
     nacos:
-      discovery:
+      config:
         server-addr: 127.0.0.1:8848
-  redis:
-    host: 192.168.184.148
-    port: 6379

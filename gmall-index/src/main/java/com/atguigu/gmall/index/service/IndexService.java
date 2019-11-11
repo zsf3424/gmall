@@ -1,6 +1,7 @@
 package com.atguigu.gmall.index.service;
 
 import com.atguigu.gmall.pms.entity.CategoryEntity;
+import com.atguigu.gmall.pms.vo.CategroyVO;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface IndexService {
     List<CategoryEntity> queryLevelFirstCategroy();
+
+    List<CategroyVO> queryCategroyVO(Long pid);
 }
