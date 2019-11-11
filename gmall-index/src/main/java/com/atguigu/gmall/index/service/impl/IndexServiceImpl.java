@@ -2,6 +2,7 @@ package com.atguigu.gmall.index.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.atguigu.core.bean.Resp;
+import com.atguigu.gmall.index.annotation.GmallCache;
 import com.atguigu.gmall.index.feign.GmallPmsClient;
 import com.atguigu.gmall.index.service.IndexService;
 import com.atguigu.gmall.pms.entity.CategoryEntity;
@@ -27,7 +28,7 @@ public class IndexServiceImpl implements IndexService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    public static final String KEY_PREFIX = "index:categroy:";
+    public static final String KEY_PREFIX = "index:categroy";
 
     @Override
     public List<CategoryEntity> queryLevelFirstCategroy() {
@@ -38,19 +39,20 @@ public class IndexServiceImpl implements IndexService {
     }
 
     @Override
+    @GmallCache(prefix = KEY_PREFIX, timeout = 300000L, random = 50000L)
     public List<CategroyVO> queryCategroyVO(Long pid) {
         // 1. 查询缓存，缓存中有的话直接返回
-        String cache = this.stringRedisTemplate.opsForValue().get(KEY_PREFIX + pid);
-        if (StringUtils.isNotEmpty(cache)) {
-            return JSON.parseArray(cache, CategroyVO.class);
-        }
+        //String cache = this.stringRedisTemplate.opsForValue().get(KEY_PREFIX + pid);
+        //if (StringUtils.isNotEmpty(cache)) {
+        //    return JSON.parseArray(cache, CategroyVO.class);
+        //}
 
         // 2. 如果缓存中没有，查询数据库
         Resp<List<CategroyVO>> listResp = this.gmallPmsClient.queryCategroyWithSub(pid);
         List<CategroyVO> categoryVOS = listResp.getData();
 
         // 3. 查询完成之后，放入缓存
-        this.stringRedisTemplate.opsForValue().set(KEY_PREFIX + pid, JSON.toJSONString(categoryVOS), 5 + (int) (Math.random() * 5), TimeUnit.DAYS);
+        //this.stringRedisTemplate.opsForValue().set(KEY_PREFIX + pid, JSON.toJSONString(categoryVOS), 5 + (int) (Math.random() * 5), TimeUnit.DAYS);
 
         return categoryVOS;
     }
