@@ -6,8 +6,11 @@ import com.atguigu.core.bean.Resp;
 import com.atguigu.gmall.pms.entity.BrandEntity;
 import com.atguigu.gmall.pms.entity.CategoryEntity;
 import com.atguigu.gmall.pms.entity.SkuInfoEntity;
+import com.atguigu.gmall.pms.entity.SkuSaleAttrValueEntity;
+import com.atguigu.gmall.pms.entity.SpuInfoDescEntity;
 import com.atguigu.gmall.pms.entity.SpuInfoEntity;
 import com.atguigu.gmall.pms.vo.CategroyVO;
+import com.atguigu.gmall.pms.vo.GroupVO;
 import com.atguigu.gmall.pms.vo.SpuAttributeValueVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,5 +60,33 @@ public interface GmallPmsApi {
     //@ApiOperation("根据一级分类id查询二级、三级分类")
     @GetMapping("pms/category/{pid}")
     public Resp<List<CategroyVO>> queryCategroyWithSub(@PathVariable("pid")Long pid);
+
+    //根据skuId查询skuInfo
+    //@ApiOperation("详情查询")
+    @GetMapping("pms/skuinfo/info/{skuId}")
+    public Resp<SkuInfoEntity> querySkuById(@PathVariable("skuId") Long skuId);
+
+    //根据spuId查询spuInfo
+    //@ApiOperation("详情查询")
+    @GetMapping("pms/spuinfo/info/{id}")
+    public Resp<SpuInfoEntity> querySpuById(@PathVariable("id") Long id);
+
+    //根据skuId查询图片集合
+    @GetMapping("pms/skuimages/{skuId}")
+    public Resp<List<String>> queryPicsBySkuId(@PathVariable("skuId")Long skuId);
+
+    //根据spuId查询销售属性集合
+    @GetMapping("pms/skusaleattrvalue/{spuId}")
+    public Resp<List<SkuSaleAttrValueEntity>> querySaleAttrValues(@PathVariable("spuId") Long spuId);
+
+    //根据spuId查询描述信息
+    //@ApiOperation("详情查询")
+    @GetMapping("pms/spuinfodesc/info/{spuId}")
+    public Resp<SpuInfoDescEntity> queryDescById(@PathVariable("spuId") Long spuId);
+
+    //根据spuId和cid查询
+    @GetMapping("pms/attrgroup/item/group/{cid}/{spuId}")
+    public Resp<List<GroupVO>> queryGroupVoByCid(@PathVariable("cid")Long cid, @PathVariable("spuId")Long spuId);
+
 
     }
