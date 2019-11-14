@@ -45,3 +45,16 @@ spring:
             - Path=/api/item/**
           filters:
             - RewritePath=/api/(?<segment>.*), /$\{segment} # 重写前缀，去掉/api
+        - id: auth-route
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment} # 重写前缀，去掉/api
+
+
+
+auth:
+  jwt:
+    publicKeyPath: E:\Workspace\workspace_idea\gmall\gmall-auth\rsa\rsa.pub
+    cookieName: GMALL_TOKEN
