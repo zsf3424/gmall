@@ -1,0 +1,19 @@
+server:
+  port: 8092
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  redis:
+    host: 192.168.184.148
+  rabbitmq:
+    host: 192.168.184.148
+    username: fengge
+    password: fengge
+    virtual-host: /fengge
+
+auth:
+  jwt:
+    publicKeyPath: E:\Workspace\workspace_idea\gmall\gmall-auth\rsa\rsa.pub
+    cookieName: GMALL_TOKEN

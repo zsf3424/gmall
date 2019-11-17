@@ -1,10 +1,9 @@
 package com.atguigu.gmall.cart.controller;
 
 import com.atguigu.core.bean.Resp;
-import com.atguigu.gmall.cart.interceptor.LoginInterceptor;
 import com.atguigu.gmall.cart.service.CartService;
 import com.atguigu.gmall.cart.vo.Cart;
-import com.atguigu.gmall.cart.vo.UserInfo;
+import com.atguigu.gmall.cart.vo.CartItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -41,6 +39,14 @@ public class CartController {
         List<Cart> carts = this.cartService.queryCarts();
 
         return Resp.ok(carts);
+    }
+
+    @GetMapping("order/{userId}")
+    public Resp<List<CartItemVO>> queryCartItemVO(@PathVariable("userId")Long userId){
+
+        List<CartItemVO> cartItemVOS = this.cartService.queryCartItemVO(userId);
+
+        return Resp.ok(cartItemVOS);
     }
 
     @PostMapping("update")

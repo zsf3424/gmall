@@ -1,9 +1,9 @@
-package com.atguigu.gmall.cart.interceptor;
+package com.atguigu.gmall.order.interceptor;
 
+import com.atguigu.core.bean.UserInfo;
 import com.atguigu.core.utils.CookieUtils;
 import com.atguigu.core.utils.JwtUtils;
-import com.atguigu.gmall.cart.config.JwtProperties;
-import com.atguigu.core.bean.UserInfo;
+import com.atguigu.gmall.order.config.JwtProperties;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,7 +13,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author zsf
@@ -32,21 +31,15 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+
         // threadLocal中的载荷信息：userId userKey
         UserInfo userInfo = new UserInfo();
 
         // 获取cookie信息（GMALL_TOKEN,  UserKey）
         String token = CookieUtils.getCookieValue(request, this.jwtProperties.getCookieName());
-        String userKey = CookieUtils.getCookieValue(request, this.jwtProperties.getUserKeyName());
-        if (StringUtils.isEmpty(userKey)) {
-            userKey = UUID.randomUUID().toString();
-            CookieUtils.setCookie(request, response, this.jwtProperties.getUserKeyName(), userKey, this.jwtProperties.getExpire());
-        }
-        userInfo.setUserKey(userKey);
 
         if (StringUtils.isEmpty(token)) {
-            THREAD_LOCAL.set(userInfo);
-            return true;
+            return false;
         }
 
         try {
@@ -56,6 +49,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             userInfo.setUserId(Long.valueOf(userInfoMap.get("id").toString()));
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
         THREAD_LOCAL.set(userInfo);
 
