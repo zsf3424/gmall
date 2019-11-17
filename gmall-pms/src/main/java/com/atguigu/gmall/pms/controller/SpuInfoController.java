@@ -1,6 +1,7 @@
 package com.atguigu.gmall.pms.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ import com.atguigu.core.bean.Resp;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +36,9 @@ public class SpuInfoController {
 
     @Autowired
     private SpuInfoService spuInfoService;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @ApiOperation("spu商品信息查询")
     @GetMapping
@@ -98,7 +104,7 @@ public class SpuInfoController {
     @PreAuthorize("hasAuthority('pms:spuinfo:update')")
     public Resp<Object> update(@RequestBody SpuInfoEntity spuInfo) {
         spuInfoService.updateById(spuInfo);
-
+        this.sendMsg(spuInfo.getId(),"update");
         return Resp.ok(null);
     }
 
@@ -114,4 +120,14 @@ public class SpuInfoController {
         return Resp.ok(null);
     }
 
+    private void sendMsg(Long spuId, String type) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", spuId);
+        map.put("type", type);
+        try {
+            this.amqpTemplate.convertAndSend("GMALL-ITEM-EXCHANGE", "item." + type, map);
+        } catch (AmqpException e) {
+            System.out.println("商品消息发送异常，商品id：{ " + spuId + "}");
+        }
+    }
 }

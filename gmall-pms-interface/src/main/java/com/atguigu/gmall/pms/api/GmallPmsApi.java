@@ -27,6 +27,10 @@ import java.util.List;
  */
 public interface GmallPmsApi {
 
+    //根据skuId查询sku的销售属性
+    @GetMapping("pms/skusaleattrvalue/sku/{skuId}")
+    public Resp<List<SkuSaleAttrValueEntity>> querySaleAttrBySkuId(@PathVariable("skuId") Long skuId);
+
     //分页查询spu
     //@ApiOperation("分页查询(排序)")
     @PostMapping("pms/spuinfo/list")
