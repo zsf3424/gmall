@@ -11,7 +11,7 @@ import com.atguigu.gmall.order.feign.GmallWmsClient;
 import com.atguigu.gmall.order.interceptor.LoginInterceptor;
 import com.atguigu.gmall.order.service.OrderService;
 import com.atguigu.gmall.order.vo.OrderConfirmVO;
-import com.atguigu.gmall.order.vo.OrderItemVO;
+import com.atguigu.gmall.oms.vo.OrderItemVO;
 import com.atguigu.gmall.pms.entity.SkuInfoEntity;
 import com.atguigu.gmall.pms.entity.SkuSaleAttrValueEntity;
 import com.atguigu.gmall.sms.vo.ItemSaleVO;
